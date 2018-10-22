@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 from datetime import datetime
 from math import isnan
 
-vols=pandas.read_csv("../Data/Extract_1cut.csv",sep=',',decimal=b',')
+vols = pandas.read_csv("../Data/Extract_1cut.csv",sep=',',decimal=b',')
 
 def data_cleaning(vols):
     vols['Date départ prévue TU'] = vols['Date départ prévue TU'].apply(lambda x: x[:10])
@@ -50,6 +50,11 @@ def data_cleaning(vols):
     
     vols_MC = vols[vols['Type exploitation']=='Air France']
     vols_MC = vols_MC[vols_MC['Type avion réalisé'].apply(lambda x: (x=='318' or x=='319' or x=='320' or x=='321'))]
+    
+    return vols_MC
+
+
+def chainage(vols_MC):
     
     #Trouver les chainages en identifiant l'heure d'arrivée de dernier vol de chaque chainage
     HA_chainage = vols_MC.groupby(['Date départ réalisée TU','Immatriculation'])[['Heure arrivée réalisée TU']].max().unstack('Immatriculation')
@@ -113,3 +118,37 @@ def data_cleaning(vols):
     
     return Chainage_var
     
+
+def plot_by_day(vols):
+    vols_MC = data_cleaning(vols)
+    
+    #week days
+
+    #jour de départ prévu
+    dateetheure=vols_MC['Date départ prévue TU']+vols['Heure départ prévue TU']
+
+    #conversion en format date time
+    dateetheure_datetime = pandas.to_datetime(dateetheure,format='%Y/%m/%d%H:%M')
+
+    #jour de la semaine
+    week_day = dateetheure_datetime.dt.day_name()
+    day = dateetheure_datetime.dt.dayofweek
+    #Creation de la colonne Week day
+    vols_MC = vols_MC.assign(Week_day= week_day)
+    vols_MC = vols_MC.assign(day_index= day)
+
+    fig = plt.figure()
+    #plt.figure()
+    plt.subplots(figsize=(20, 5))
+    #plt.plot(Escale_D_max,"*")
+    plt.plot(vols_MC.groupby(['Week_day'])[['Retard_D']].mean(),linewidth=0.8, marker="+")
+    plt.xticks(rotation = 'vertical')
+    plt.grid(True)
+    plt.ylim(bottom=0)
+    plt.title("Retard moyen par jour de la semaine")
+    plt.show()
+
+plot_by_day(vols)
+
+
+print('aaaa')
