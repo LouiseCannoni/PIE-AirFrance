@@ -12,7 +12,9 @@ import matplotlib.pyplot as plt
 from datetime import datetime
 from math import isnan
 
-vols = pandas.read_csv("./Data/Extract_1cut.csv",sep=',',decimal=b',')
+print('avant csv')
+
+vols = pandas.read_csv("../Extract_1cut.csv",sep=',',decimal=b',')
 
 def data_cleaning(vols):
     vols['Date départ prévue TU'] = vols['Date départ prévue TU'].apply(lambda x: x[:10])
