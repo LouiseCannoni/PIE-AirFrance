@@ -61,6 +61,8 @@ def data_cleaning(vols):
     vols_MC = vols_MC.assign(Week_day= week_day)
     vols_MC = vols_MC.assign(day_index= day)
     
+    vols_MC.to_csv('./Data/vols_MC_cleaned.csv')
+
     return vols_MC
 
 def simplify_retards(df):
