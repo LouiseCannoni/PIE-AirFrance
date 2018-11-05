@@ -14,7 +14,7 @@ from math import isnan
 
 print('avant csv')
 
-vols = pandas.read_csv("../Extract_1cut.csv",sep=',',decimal=b',')
+vols = pandas.read_csv("./Extract_1cut.csv",sep=',',decimal=b',')
 
 def data_cleaning(vols):
     vols['Date départ prévue TU'] = vols['Date départ prévue TU'].apply(lambda x: x[:10])
